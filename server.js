@@ -1,5 +1,6 @@
 const http = require('http')
 require('dotenv').config()
+const headers = require('./service/headers')
 const Post = require('./model/posts')
 const handleSuccess = require('./service/handleSuccess')
 const handleError = require('./service/handleError')
