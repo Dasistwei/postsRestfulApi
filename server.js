@@ -1,6 +1,10 @@
 const http = require('http')
 require('dotenv').config()
 const Post = require('./model/posts')
+const handleSuccess = require('./service/handleSuccess')
+const handleError = require('./service/handleError')
+
+
 //連接資料庫
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB_ATLAS_URL)
@@ -9,77 +13,101 @@ mongoose.connect(process.env.MONGODB_ATLAS_URL)
 
  const init = async() =>{
   try {
-    // 新增：Model.create()
-    const data = { content: '貼文1', name: '小花' }
-    const result = await Post.create(
-      {
-        name: data.name,
-        content: data.content
-      }
-    )
-    console.log(result)
-    // const posts = await Post.find({})
-    // console.log(posts)
+    // 1. 查詢：Model.find()
+    //  const posts = await Post.find({})
+    // 2. 新增：Model.create()
+    // const data = { content: '貼文1', name: '小花' }
+    // const result = await Post.create(
+    //   {
+    //     name: data.name,
+    //     content: data.content
+    //   }
+    // )
+    // 3. 更新：Model.findByIdAndUpdate() 
+    // const result = await Post.findByIdAndUpdate(
+    //   {
+    //     _id: '6619637b8858fe02aef229d4'
+    //   },
+    //   {
+    //     name: '小明',
+    //     content: '更新1'
+    //   }
+    // )
+    // console.log(result)
   } catch (error) {
     console.log(error.message)
   }
 }
 // init()
+
 const requestListener = async(req, res) =>{
   let body = ''
   req.on('data', chunk => {
     body += chunk
   })
-  const headers = {
-    'Access-Control-Allow-Headers': 'Content-Type, Aithorization, Content-Length, X-Requested-With',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'PATCH, POST, GET, OPTIONS, DELETE',
-    'Content-Type': 'application/json' 
-  }  
+
   // CRUD
   // 取得所有posts:  GET /posts
   if (req.url === '/posts' && req.method === 'GET') {
     const posts = await Post.find()
-    res.writeHead(200, headers)
-    res.write(JSON.stringify(
-      {
-        "status": "success",
-        data: posts
-      }
-    ))
-    res.end()
+    handleSuccess(res, posts)
 
-  //新增POST
+  // 新增 post: POST /posts
   }else if(req.url === '/posts' && req.method === 'POST'){
     req.on('end', async()=>{
       try {
-        const data = JSON.parse(body)
+        const { content, image, name, likes } = JSON.parse(body)
         const result = await Post.create(
           {
-            name: data.name,
-            content: data.content
+            name,
+            content,
+            image,
+            likes
           }
         )
-        res.writeHead(200, headers)
-        res.write(JSON.stringify(
-          {
-            "status": "success",
-            "data": result
-          }
-        ))
-        res.end()        
+        handleSuccess(res, result)     
       } catch (error) {
-        res.writeHead(400, headers)
-        res.write(JSON.stringify(
-          {
-            "status": "false",
-            "message": "欄位填寫錯誤"
-          }
-        ))
-        res.end()       
+        handleError(res)
       }
     })
-  } else if(req.method === 'OPTIONS'){
+  // 修改單筆post: PATCH /posts/{{post id}}
+  } else if(req.url.startsWith('/posts/') && req.method === 'PATCH'){
+    req.on('end', async()=>{
+      try {
+        const { content, image, name, likes } = JSON.parse(body)
+        const postId = req.url.split('/').pop()
+        const post = await Post.findOne({ _id: postId })
+        const result = await Post.findByIdAndUpdate(
+          {
+            _id: postId
+          },
+          {
+            name,
+            content,
+            image,
+            likes
+          }
+        ) 
+
+        handleSuccess(res, result)
+        
+      } catch (error) {
+        handleError(res)
+        console.log(error.message)
+      }
+    })
+
+  // 刪除單筆post: DELETE /posts/{{post id}}    
+  }else if(req.method === 'DELETE' && req.url.startsWith('/posts/')){
+    const id = req.url.split('/').pop()
+    const result = await Post.findByIdAndDelete(id)
+    handleSuccess(res, result)
+
+  }else if(req.method === 'DELETE' && req.url === '/posts'){
+    const result = await Post.deleteMany({})
+    handleSuccess(res, result)
+
+  }else if(req.method === 'OPTIONS'){
     res.writeHead(200, headers)
     res.end()
   } else {
@@ -92,9 +120,7 @@ const requestListener = async(req, res) =>{
     ))
     res.end()
   }
-  // 新增 post: POST /posts
-  // 修改單筆post: PATCH /posts/{{post id}}
-  // 刪除單筆post: DELETE /posts/{{post id}}
+
   // 刪除全部posts: DELETE /posts
 
 }
