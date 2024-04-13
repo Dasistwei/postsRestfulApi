@@ -21,9 +21,9 @@ const postSchema = new mongoose.Schema(
         required: [true, '貼文姓名未填寫']
     },
     likes: {
-        type:Number,
+        type: Number,
         default:0
-    }
+    }    
   }  
 )
 // 建立model

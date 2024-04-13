@@ -46,7 +46,6 @@ const requestListener = async(req, res) =>{
     body += chunk
   })
 
-  // CRUD
   // 取得所有posts:  GET /posts
   if (req.url === '/posts' && req.method === 'GET') {
     const posts = await Post.find()
@@ -103,6 +102,7 @@ const requestListener = async(req, res) =>{
     const result = await Post.findByIdAndDelete(id)
     handleSuccess(res, result)
 
+  // 刪除全部posts: DELETE /posts
   }else if(req.method === 'DELETE' && req.url === '/posts'){
     const result = await Post.deleteMany({})
     handleSuccess(res, result)
@@ -121,7 +121,6 @@ const requestListener = async(req, res) =>{
     res.end()
   }
 
-  // 刪除全部posts: DELETE /posts
 
 }
 const server = http.createServer(requestListener)
