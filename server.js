@@ -124,5 +124,5 @@ const requestListener = async(req, res) =>{
 
 }
 const server = http.createServer(requestListener)
-server.listen(8080, ()=>{ console.log('監聽8080')})
+server.listen(process.env.PORT || 8080, ()=>{ console.log('監聽8080')})
 // console.log(http)
