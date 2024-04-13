@@ -1,0 +1,150 @@
+{
+	"info": {
+		"_postman_id": "9e557039-270c-401b-8b60-8270ba7c8662",
+		"name": "postRestfulApi-render",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29633823"
+	},
+	"item": [
+		{
+			"name": "取得貼文",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "新增貼文",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\":\"貼文5\",\n    \"image\": \"http://localhost:8080/posts\",\n    \"name\": \"小黑\",\n    \"likes\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "測試OPTIONS",
+			"request": {
+				"method": "OPTIONS",
+				"header": [],
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "更新貼文",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\":\"貼文5\",\n    \"image\": \"http://localhost:8080/posts\",\n    \"name\": \"小紅\",\n    \"likes\": 100\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts/661a3d705682bae18b76744b",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts",
+						"661a3d705682bae18b76744b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除單筆貼文",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts/661a3d705682bae18b76744b",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts",
+						"661a3d705682bae18b76744b"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "刪除全部",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://postsrestfulapi.onrender.com/posts",
+					"protocol": "https",
+					"host": [
+						"postsrestfulapi",
+						"onrender",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
