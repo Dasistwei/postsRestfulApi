@@ -5,7 +5,7 @@ const handleSuccess = (res,data) =>{
   res.write(JSON.stringify(
     {
       "status": "success",
-      data
+      data: data
     }
   ))
   res.end()

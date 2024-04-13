@@ -51,7 +51,6 @@ const requestListener = async(req, res) =>{
   if (req.url === '/posts' && req.method === 'GET') {
     const posts = await Post.find()
     handleSuccess(res, posts)
-
   // 新增 post: POST /posts
   }else if(req.url === '/posts' && req.method === 'POST'){
     req.on('end', async()=>{
