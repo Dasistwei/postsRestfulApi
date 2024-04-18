@@ -12,35 +12,6 @@ mongoose.connect(process.env.MONGODB_ATLAS_URL)
  .then(res => console.log('成功連接資料庫'))
  .catch(err => console.log('資料庫連接有誤',err.message))
 
- const init = async() =>{
-  try {
-    // 1. 查詢：Model.find()
-    //  const posts = await Post.find({})
-    // 2. 新增：Model.create()
-    // const data = { content: '貼文1', name: '小花' }
-    // const result = await Post.create(
-    //   {
-    //     name: data.name,
-    //     content: data.content
-    //   }
-    // )
-    // 3. 更新：Model.findByIdAndUpdate() 
-    // const result = await Post.findByIdAndUpdate(
-    //   {
-    //     _id: '6619637b8858fe02aef229d4'
-    //   },
-    //   {
-    //     name: '小明',
-    //     content: '更新1'
-    //   }
-    // )
-    // console.log(result)
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-// init()
-
 const requestListener = async(req, res) =>{
   let body = ''
   req.on('data', chunk => {
@@ -58,9 +29,9 @@ const requestListener = async(req, res) =>{
         const { content, image, name, likes } = JSON.parse(body)
         const result = await Post.create(
           {
-            name,
-            content,
-            image,
+            name: name.trim(),
+            content: content.trim(),
+            image: image.trim(),
             likes
           }
         )
@@ -73,7 +44,19 @@ const requestListener = async(req, res) =>{
   } else if(req.url.startsWith('/posts/') && req.method === 'PATCH'){
     req.on('end', async()=>{
       try {
-        const { content, image, name, likes } = JSON.parse(body)
+        let data = JSON.parse(body)
+        const allowedKeys = ["name", "content", "image", "likes"]
+        for (const key in data) {
+          if (!allowedKeys.includes(key)) {
+            handleError(res)
+          }else if(typeof data[key] === 'string'){
+            data[key] = data[key].trim()
+          }else{
+            data[key] = data[key]
+          }
+        }
+
+        const { content, image, name, likes } = data
         const postId = req.url.split('/').pop()
         const post = await Post.findOne({ _id: postId })
         const result = await Post.findByIdAndUpdate(
@@ -85,6 +68,9 @@ const requestListener = async(req, res) =>{
             content,
             image,
             likes
+          },
+          {
+            new: true
           }
         ) 
 
@@ -98,14 +84,22 @@ const requestListener = async(req, res) =>{
 
   // 刪除單筆post: DELETE /posts/{{post id}}    
   }else if(req.method === 'DELETE' && req.url.startsWith('/posts/')){
-    const id = req.url.split('/').pop()
-    const result = await Post.findByIdAndDelete(id)
-    handleSuccess(res, result)
-
-  // 刪除全部posts: DELETE /posts
+    try {
+      const id = req.url.split('/').pop()
+      const result = await Post.findByIdAndDelete(id)
+      handleSuccess(res, result)      
+    } catch (error) {
+      handleError(res)
+    }
+    
+    // 刪除全部posts: DELETE /posts
   }else if(req.method === 'DELETE' && req.url === '/posts'){
-    const result = await Post.deleteMany({})
-    handleSuccess(res, result)
+    try {
+      const result = await Post.deleteMany({})
+      handleSuccess(res, result)      
+    } catch (error) {
+      handleError(res)
+    }
 
   }else if(req.method === 'OPTIONS'){
     res.writeHead(200, headers)
@@ -125,4 +119,10 @@ const requestListener = async(req, res) =>{
 }
 const server = http.createServer(requestListener)
 server.listen(process.env.PORT || 8080, ()=>{ console.log('監聽8080')})
-// console.log(http)
+// let data1 = {
+//   content: '  修. 改3   ',
+//   image: 'http://localhost:8080/posts',
+//   name: ' 小白.  ',
+//   likes: 10
+// }
+// console.log(data1["content"]= data1["content"].trim(), data1)

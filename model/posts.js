@@ -24,9 +24,23 @@ const postSchema = new mongoose.Schema(
         type: Number,
         default:0
     }    
-  }  
+  },{
+    versionKey: false
+  }
 )
 // 建立model
-const Post = mongoose.model('Post', postSchema)
 
+// postSchema.pre('save', function(next) {
+//   const fieldsToTrim = ['content', 'image', 'name', 'likes'];
+//   const doc = this
+//   console.log(this)
+//   fieldsToTrim.forEach(field => {
+//     console.log(doc[field])
+//     if (doc[field]) {
+//       doc[field] = doc[field].trim();
+//     }
+//   });
+//   next()
+// })
+const Post = mongoose.model('Post', postSchema)
 module.exports = Post
