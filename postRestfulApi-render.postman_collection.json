@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "9e557039-270c-401b-8b60-8270ba7c8662",
+		"_postman_id": "7b59036a-766e-42c9-b702-507b4c944cdf",
 		"name": "postRestfulApi-render",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29633823"
@@ -33,7 +33,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"content\":\"貼文5\",\n    \"image\": \"http://localhost:8080/posts\",\n    \"name\": \"小黑\",\n    \"likes\": 1\n}",
+					"raw": "{\n    \"content\":\"新增   \" ,\n    \"image\": \"http://localhost:8080/posts  \",\n    \"name\": \"小白   \",\n    \"likes\": 1\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -82,7 +82,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"content\":\"貼文5\",\n    \"image\": \"http://localhost:8080/posts\",\n    \"name\": \"小紅\",\n    \"likes\": 100\n}",
+					"raw": "{\n    \"content\":\" 修改1  \",\n    \"image\": \" http://localhost:8080/posts\",\n    \"name\": \" 小紅\",\n    \"likes\": 100\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -90,7 +90,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://postsrestfulapi.onrender.com/posts/661a3d705682bae18b76744b",
+					"raw": "https://postsrestfulapi.onrender.com/posts/66212f6524bf35abb5f075f3",
 					"protocol": "https",
 					"host": [
 						"postsrestfulapi",
@@ -99,7 +99,7 @@
 					],
 					"path": [
 						"posts",
-						"661a3d705682bae18b76744b"
+						"66212f6524bf35abb5f075f3"
 					]
 				}
 			},
@@ -111,7 +111,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "https://postsrestfulapi.onrender.com/posts/661a3d705682bae18b76744b",
+					"raw": "https://postsrestfulapi.onrender.com/posts/66212f6c24bf35abb5f075f5",
 					"protocol": "https",
 					"host": [
 						"postsrestfulapi",
@@ -120,7 +120,7 @@
 					],
 					"path": [
 						"posts",
-						"661a3d705682bae18b76744b"
+						"66212f6c24bf35abb5f075f5"
 					]
 				}
 			},
