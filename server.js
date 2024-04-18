@@ -44,6 +44,9 @@ const requestListener = async(req, res) =>{
   } else if(req.url.startsWith('/posts/') && req.method === 'PATCH'){
     req.on('end', async()=>{
       try {
+        const postId = req.url.split('/').pop()
+        const post = await Post.findOne({_id: postId})
+        
         let data = JSON.parse(body)
         const allowedKeys = ["name", "content", "image", "likes"]
         for (const key in data) {
@@ -57,8 +60,6 @@ const requestListener = async(req, res) =>{
         }
 
         const { content, image, name, likes } = data
-        const postId = req.url.split('/').pop()
-        const post = await Post.findOne({ _id: postId })
         const result = await Post.findByIdAndUpdate(
           {
             _id: postId
@@ -73,9 +74,11 @@ const requestListener = async(req, res) =>{
             new: true
           }
         ) 
-
-        handleSuccess(res, result)
-        
+        if(result === null){
+          handleError(res)
+        }else{
+          handleSuccess(res, result)
+        }
       } catch (error) {
         handleError(res)
         console.log(error.message)
@@ -87,9 +90,14 @@ const requestListener = async(req, res) =>{
     try {
       const id = req.url.split('/').pop()
       const result = await Post.findByIdAndDelete(id)
-      handleSuccess(res, result)      
+      if(result === null){
+        handleError(res)
+      }else{
+        handleSuccess(res, result)
+      }
     } catch (error) {
       handleError(res)
+      console.log(error.message)
     }
     
     // 刪除全部posts: DELETE /posts
@@ -115,14 +123,13 @@ const requestListener = async(req, res) =>{
     res.end()
   }
 
-
+  // const init = async() =>{
+  //   await Post.findOne({_id:'66211cf365e00addd554ab69s'})
+  //   .then(res=> console.log(res))
+  //   .catch(err=> console.log(err))
+  //   // console.log(post)
+  // }
+  // init()
 }
 const server = http.createServer(requestListener)
 server.listen(process.env.PORT || 8080, ()=>{ console.log('監聽8080')})
-// let data1 = {
-//   content: '  修. 改3   ',
-//   image: 'http://localhost:8080/posts',
-//   name: ' 小白.  ',
-//   likes: 10
-// }
-// console.log(data1["content"]= data1["content"].trim(), data1)
