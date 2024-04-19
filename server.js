@@ -51,7 +51,8 @@ const requestListener = async(req, res) =>{
         const allowedKeys = ["name", "content", "image", "likes"]
         for (const key in data) {
           if (!allowedKeys.includes(key)) {
-            handleError(res)
+            // 一個請求只能發送一個回應，所以加上return 
+            return handleError(res)
           }else if(typeof data[key] === 'string'){
             data[key] = data[key].trim()
           }else{
